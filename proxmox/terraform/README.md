@@ -30,12 +30,12 @@
     network:
         version: 2
         ethernets:
-            enp0s3:
+            <interface de red>:
                 dhcp4: false
                 addresses: [192.168.122.101/24]
                 routes:
                     - to: default
-                    via: 192.168.122.1
+                      via: 192.168.122.1
                 nameservers:
                     addresses: [8.8.8.8,8.8.4.4,192.168.122.1]
     ```

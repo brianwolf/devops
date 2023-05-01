@@ -1,7 +1,8 @@
-resource "proxmox_vm_qemu" "ubuntu-server-01" {
-  name = "ubuntu-server-01"
+resource "proxmox_vm_qemu" "ubuntu-kube-m1" {
+
+  name = "ubuntu-kube-m1"
   desc = "ubuntu-server cloned"
-  tags = "EKS"
+  tags = "kube,master"
 
   vmid        = "102"
   target_node = "server01"
@@ -14,8 +15,6 @@ resource "proxmox_vm_qemu" "ubuntu-server-01" {
   cores   = 2
   sockets = 2
   memory  = 4096
-
-  ipconfig0 = "gw=192.168.122.1,ip=192.168.122.101/24"
 
   network {
     model    = "virtio"
