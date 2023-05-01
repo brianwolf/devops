@@ -1,0 +1,42 @@
+---
+- hosts: "masters"
+  remote_user: ubuntu
+
+  tasks:
+
+    - name: init kubeadmin
+      become: yes
+      shell: |
+            systemctl enable kubelet
+            kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock
+            if ! kubectl cluster-info | grep -q 'is running at'; then
+              kubeadm init \
+                  --pod-network-cidr=192.168.0.0/16 \
+                  --cri-socket unix:///var/run/crio/crio.sock
+            fi
+
+    # TODO: arreglar esto para que se pueda usar la variable $HOME de ubuntu, no de root
+    - name: config user
+      become: yes
+      shell: |
+            mkdir -p /home/ubuntu/.kube
+            cp -f /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
+            chown ubuntu /home/ubuntu/.kube/config
+
+    # TODO: arreglar esto para que se pueda usar la variable $HOME de ubuntu, no de root
+    - name: config kubeconfig
+      become: yes
+      shell: |
+            echo "KUBECONFIG=/home/ubuntu/.kube/config" >> /etc/environment
+
+    - name: print cluster info
+      shell: kubectl cluster-info
+      register: cluster_info
+
+    - debug: 
+        msg: "{{cluster_info.stdout_lines}}"
+
+    - name: add alias
+      shell: |
+            echo "alias k=kubectl" >> $HOME/.bashrc
+            . $HOME/.bashrc
