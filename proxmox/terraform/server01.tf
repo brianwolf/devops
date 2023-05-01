@@ -15,6 +15,8 @@ resource "proxmox_vm_qemu" "ubuntu-server-01" {
   sockets = 2
   memory  = 4096
 
+  ipconfig0 = "gw=192.168.122.1,ip=192.168.122.101/24"
+
   network {
     model    = "virtio"
     bridge   = "vmbr0"
