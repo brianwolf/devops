@@ -1,42 +1,38 @@
----
-- hosts: "masters"
-  remote_user: ubuntu
-
+- hosts: masters
+  become: yes
   tasks:
+    - name: create an empty file for Kubeadm configuring
+      copy:
+        content: ""
+        dest: /etc/kubernetes/kubeadm-config.yaml
+        force: no
+    
+    - name: initialize the cluster (this could take some time)
+      shell: kubeadm init --pod-network-cidr=192.168.0.0/16 >> cluster_initialized.log
+      args:
+        chdir: /home/ubuntu
+        creates: cluster_initialized.log
 
-    - name: init kubeadmin
+    - name: create .kube directory
       become: yes
-      shell: |
-            systemctl enable kubelet
-            kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock
-            if ! kubectl cluster-info | grep -q 'is running at'; then
-              kubeadm init \
-                  --pod-network-cidr=192.168.0.0/16 \
-                  --cri-socket unix:///var/run/crio/crio.sock
-            fi
+      become_user: ubuntu
+      file:
+        path: $HOME/.kube
+        state: directory
+        mode: 0755
 
-    # TODO: arreglar esto para que se pueda usar la variable $HOME de ubuntu, no de root
-    - name: config user
+    - name: copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/ubuntu/.kube/config
+        remote_src: yes
+        owner: ubuntu
+
+    - name: install Pod network with calico
       become: yes
+      become_user: ubuntu
       shell: |
-            mkdir -p /home/ubuntu/.kube
-            cp -f /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
-            chown ubuntu /home/ubuntu/.kube/config
-
-    # TODO: arreglar esto para que se pueda usar la variable $HOME de ubuntu, no de root
-    - name: config kubeconfig
-      become: yes
-      shell: |
-            echo "KUBECONFIG=/home/ubuntu/.kube/config" >> /etc/environment
-
-    - name: print cluster info
-      shell: kubectl cluster-info
-      register: cluster_info
-
-    - debug: 
-        msg: "{{cluster_info.stdout_lines}}"
-
-    - name: add alias
-      shell: |
-            echo "alias k=kubectl" >> $HOME/.bashrc
-            . $HOME/.bashrc
+              kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/tigera-operator.yaml
+              kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.1/manifests/custom-resources.yaml
+      args:
+        chdir: $HOME
