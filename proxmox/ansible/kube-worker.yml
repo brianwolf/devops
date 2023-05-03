@@ -10,14 +10,23 @@
         join_command: "{{ join_command_raw.stdout_lines[0] }}"
 
 
-- hosts: workers
+- hosts: worker01
   become: yes
   tasks:
     - name: TCP port 6443 on master is reachable from worker
-      wait_for: "host={{ hostvars['master01']['ansible_default_ipv4']['address'] }} port=6443 timeout=60"
+      wait_for:
+        host: "{{ hostvars['master01']['ansible_default_ipv4']['address'] }}"
+        port: 6443
+        timeout: 30
 
     - name: join cluster
       shell: "{{ hostvars['master01'].join_command }} --node-name worker01 >> node_joined.log"
       args:
         chdir: /home/ubuntu
         creates: node_joined.log
+
+    - name: add worker label
+      shell: kubectl label node worker01 node-role.kubernetes.io/worker=worker
+      args:
+        chdir: /home/ubuntu
+        creates: cluster_initialized.log

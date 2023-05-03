@@ -2,12 +2,12 @@
 
 1. Crear un token en proxmox y asegurarse que la casilla de **Privilege Separetion** este **destildada**
 
-2. Agregar el api key y el secret generado en el archivo **.env**
+2. Agregar el api key y el secret generado en el archivo **env.sh**
 
 3. Ejecutar
 
     ```bash
-    . .env
+    . ./env.sh
     ```
 
 4. Ejecutar
