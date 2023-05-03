@@ -8,7 +8,13 @@
         force: no
     
     - name: initialize the cluster (this could take some time)
-      shell: kubeadm init --pod-network-cidr=192.168.0.0/16 >> cluster_initialized.log
+      shell: kubeadm init --pod-network-cidr=192.168.0.0/16 --node-name master01 >> cluster_initialized.log
+      args:
+        chdir: /home/ubuntu
+        creates: cluster_initialized.log
+
+    - name: initialize the cluster (this could take some time)
+      shell: kubectl label node master01 node-role.kubernetes.io/master=master
       args:
         chdir: /home/ubuntu
         creates: cluster_initialized.log
