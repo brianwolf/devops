@@ -1,14 +1,14 @@
 resource "proxmox_vm_qemu" "ubuntu-kube-m1" {
 
-  name = "ubuntu-kube-m1"
-  desc = "ubuntu-server cloned"
+  name = "kube-m1"
+  desc = "ubuntu-server for kubernetes"
   tags = "kube,master"
 
-  vmid        = "102"
+  vmid        = "110"
   target_node = "server01"
-  clone       = "ubuntu-server"
+  clone       = "kube"
 
-  os_type = "ubuntu"
+  os_type = "cloud-init"
   agent   = 0
 
   startup = "1"
