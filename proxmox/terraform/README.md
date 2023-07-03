@@ -18,30 +18,32 @@
     make a
     ```
 
-5. Cambiar la ip de la maquina virtual
+## Configs *(opcional)*
 
-    ```bash
-    sudo vim /etc/netplan/00-installer-config.yaml
-    ```
+### Cambiar la ip de la maquina virtual
 
-    Agregar lo siguiente:
+```bash
+sudo vim /etc/netplan/00-installer-config.yaml
+```
 
-    ```bash
-    network:
-      version: 2
-      ethernets:
-        <interface de red>:
-          dhcp4: false
-          addresses: [192.168.122.101/24]
-          routes:
-            - to: default
-              via: 192.168.122.1
-          nameservers:
-            addresses: [8.8.8.8,8.8.4.4,192.168.122.1]
-    ```
+Agregar lo siguiente:
 
-    Ejecutar para aplicar los cambios:
+```bash
+network:
+  version: 2
+  ethernets:
+    <interface de red>:
+      dhcp4: false
+      addresses: [192.168.122.101/24]
+      routes:
+        - to: default
+          via: 192.168.122.1
+      nameservers:
+        addresses: [8.8.8.8,8.8.4.4,192.168.122.1]
+```
 
-    ```bash
-    sudo netplan apply
-    ```
+Ejecutar para aplicar los cambios:
+
+```bash
+sudo netplan apply
+```

@@ -73,26 +73,47 @@
     * Se recomienda usar 4 cores
     * Todo lo demas dejarlo por default
 
-4. Una vez generada la VM ir a *Hardware > Add > Cloudinit Driver*
+4. Instalar ubuntu server normalmente
+
+5. Actualizar ubuntu server
+
+    ```bash
+    sudo apt update
+    sudo apt dist-upgrade
+    ```
+
+6. Instalar qemu-guest-agent
+
+    Es para que se pueda leer la ip cuando se crea la VM
+
+    ```bash
+    sudo apt install qemu-guest-agent
+    ```
+
+## Cloud-init *(opcional)*
+
+En caso de que se quiera usar cloud-init en las VM
+
+1. Una vez generada la VM ir a *Hardware > Add > Cloudinit Driver*
     * Configurarlo con lo default
 
-5. Una vez que esta el cloud init activo ir a *Cloud Init* y configurar con lo siguiente
+2. Una vez que esta el cloud init activo ir a *Cloud Init* y configurar con lo siguiente
     * user: kube
     * pass: kube
     * ipv4: 192.168.122.10
     * Gateway: 192.168.122.1
     * ipv6: DHCP
 
-6. Luego iniciar la VM e instalar ubuntu server normalmente
+3. Luego iniciar la VM e instalar ubuntu server normalmente
     * Usar ip estatica:
         * subnet: 192.168.122.0/24
         * adress: 192.168.122.10
         * Gateway: 192.168.122.1
         * nameserver: 8.8.8.8,8.8.4.4
 
-7. Luego de instalar, antes de reiniciar desacoplar el CD-ROM con la iso de instalacion *Hardware > CD/DVD Drive > Edit > Do not use any media*
+4. Luego de instalar, antes de reiniciar desacoplar el CD-ROM con la iso de instalacion *Hardware > CD/DVD Drive > Edit > Do not use any media*
 
-8. Luego ejecutar los siguientes comandos para dejar bien configurado el ubuntu server
+5. Luego ejecutar los siguientes comandos para dejar bien configurado el ubuntu server
 
     ```bash
     sudo apt autoremove cloud-init
@@ -102,4 +123,4 @@
     sudo apt install cloud-init
     ```
 
-9. Convertir la VM en Temaplate llendo a *More > Convert to template*
+6. Convertir la VM en Temaplate llendo a *More > Convert to template*
