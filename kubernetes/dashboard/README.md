@@ -8,6 +8,8 @@
 
 2. Configurar permisos
 
+    Antes borrar los CRB y el CR de kubernetes-dashboard
+
     ```bash
     kubectl apply -f yamls/
     ```
