@@ -11,5 +11,4 @@
 ## Pagina
 
 [Pagina oficial](https://kubernetes.github.io/ingress-nginx/deploy/)
-https://metallb.universe.tf/installation/
-
+[Metalb](https://metallb.universe.tf/installation/)
